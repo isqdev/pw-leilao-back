@@ -1,14 +1,12 @@
-package com.isaque.backend.dto;
+package com.isaque.backend.dto.response;
 
 import com.isaque.backend.model.Categoria;
-import com.isaque.backend.model.Leilao;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class LeilaoRequestMaxDTO {
+public class LeilaoResponseMaxDTO {
     private Long id;
     private String titulo;
     private String descricao;

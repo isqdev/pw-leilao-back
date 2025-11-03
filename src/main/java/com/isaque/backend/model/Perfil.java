@@ -15,19 +15,10 @@ public class Perfil {
     @NotBlank(message = "{validation.name.notblank}")
     private String nome;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public @NotBlank(message = "{validation.name.notblank}") String getNome() {
-        return nome;
-    }
-
-    public void setNome(@NotBlank(message = "{validation.name.notblank}") String nome) {
+    public Perfil(String nome) {
         this.nome = nome;
     }
+
+    public Perfil() {}
+
 }

@@ -49,6 +49,7 @@ public class ConfiguracaoSeguranca {
             .requestMatchers("/categoria/**").permitAll()
             .requestMatchers("/leilao/public").permitAll()
             .requestMatchers("/leilao/**").permitAll()
+            .requestMatchers("/pessoa/cadastro").permitAll()
             /* .requestMatchers("/api/pessoa/**").hasRole("ADMIN") */
                 .anyRequest().authenticated()
             )

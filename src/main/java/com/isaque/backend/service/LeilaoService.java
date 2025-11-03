@@ -1,5 +1,8 @@
 package com.isaque.backend.service;
 
+import com.isaque.backend.dto.request.LeilaoRequestDTO;
+import com.isaque.backend.dto.response.LeilaoResponseMaxDTO;
+import com.isaque.backend.dto.response.LeilaoResponsePreviewDTO;
 import com.isaque.backend.exception.NaoEncontradoExcecao;
 import com.isaque.backend.model.Categoria;
 import com.isaque.backend.model.Leilao;
@@ -10,8 +13,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class LeilaoService {
@@ -24,21 +25,28 @@ public class LeilaoService {
     @Autowired
     private CategoriaService categoriaService;
 
-    public Leilao inserir(Leilao leilao) {
-        Leilao leilaoCadastrado = leilaoRepository.save(leilao);
-        return leilaoCadastrado;
+    public Leilao inserir(LeilaoRequestDTO dto) {
+        Categoria categoria = categoriaService.buscarPorId(dto.getCategoria());
+
+        Leilao leilao = new Leilao(
+                dto.getTitulo(), dto.getDescricao(), dto.getDescricaoDetalhada(),
+                dto.getDataHoraInicio(), dto.getDataHoraFim(), Leilao.StatusLeilao.EM_ANALISE,
+                dto.getObservacao(), dto.getValorIncremento(), dto.getLanceMinimo(), categoria);
+
+        return leilaoRepository.save(leilao);
     }
 
-    public Leilao alterar(Leilao leilao) {
-        Leilao leilaoBanco = leilaoRepository.findById(leilao.getId())
+    public Leilao alterar(LeilaoRequestDTO leilao, Long id) {
+        Leilao leilaoBanco = leilaoRepository.findById(id)
                 .orElseThrow(
                         () -> new NaoEncontradoExcecao(messageSource.getMessage(
                                 "leilao.notfound",
-                                new Object[] { leilao.getId() },
+                                new Object[] { id },
                                 LocaleContextHolder.getLocale())));
-        leilaoBanco.setTitulo(leilao.getTitulo());
-        leilaoBanco.setDescricao(leilao.getDescricao());
-        leilaoBanco.setDataHoraInicio(leilao.getDataHoraInicio());
+
+        leilaoBanco.atualizar(leilao);
+        leilaoBanco.setCategoria(categoriaService.buscarPorId(leilao.getCategoria()));
+
         return leilaoRepository.save(leilaoBanco);
     }
 
@@ -59,8 +67,24 @@ public class LeilaoService {
         return leilaoRepository.findAll(pageable);
     }
 
-    public List<Leilao> buscarPorCategoria(Long id) {
-        Categoria categoria = categoriaService.buscarPorId(id);
-        return leilaoRepository.findByCategoria(categoria);
+    public Page<LeilaoResponsePreviewDTO> buscarTodosPreview(Pageable pageable) {
+        return leilaoRepository.findAll(pageable)
+                .map(leilao -> new LeilaoResponsePreviewDTO(leilao.getId(), leilao.getTitulo(), leilao.getDescricao(), leilao.getDataHoraInicio()));
     }
+
+    public LeilaoResponseMaxDTO buscarLeilaoCompleto(Long id) {
+        LeilaoResponseMaxDTO dto = new LeilaoResponseMaxDTO();
+        Leilao leilao = buscarPorId(id);
+        return dto;
+    }
+
+    public Page<Leilao> buscarPorCategoria(Long id, Pageable pageable) {
+        Categoria categoria = categoriaService.buscarPorId(id);
+        return leilaoRepository.findByCategoria(categoria, pageable);
+    }
+
+//    public Page<Leilao> buscarPorStatus(Long id, Pageable pageable) {
+////        Categoria categoria = sta.buscarPorId(id);
+////        return leilaoRepository.findByCategoria(categoria, pageable);
+//    }
 }

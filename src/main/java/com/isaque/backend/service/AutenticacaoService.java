@@ -1,7 +1,7 @@
 package com.isaque.backend.service;
 
-import com.isaque.backend.dto.PessoaLoginDTO;
-import com.isaque.backend.dto.PessoaRequestDTO;
+import com.isaque.backend.dto.request.PessoaLoginDTO;
+import com.isaque.backend.dto.request.PessoaCadastroDTO;
 import com.isaque.backend.model.Pessoa;
 import com.isaque.backend.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AutenticacaoService {
     @Autowired
     private JwtService jwtService;
 
-    public PessoaLoginDTO autenticar(PessoaRequestDTO pessoa) {
+    public PessoaLoginDTO autenticar(PessoaCadastroDTO pessoa) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(pessoa.getEmail(), pessoa.getSenha())
         );

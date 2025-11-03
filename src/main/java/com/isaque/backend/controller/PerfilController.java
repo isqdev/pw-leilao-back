@@ -36,8 +36,8 @@ public class PerfilController {
         return ResponseEntity.ok(perfilService.buscarTodos(pageable));
     }
 
-    @PostMapping
-    public ResponseEntity<Perfil> inserir(@Valid @RequestBody Perfil perfil) {
+    @PostMapping("/{perfil}")
+    public ResponseEntity<Perfil> inserir(@PathVariable("perfil") String perfil) {
         return ResponseEntity.ok(perfilService.inserir(perfil));
     }
 

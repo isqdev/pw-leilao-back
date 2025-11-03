@@ -1,6 +1,9 @@
 package com.isaque.backend.service;
 
+import com.isaque.backend.dto.request.PessoaCadastroDTO;
 import com.isaque.backend.model.Perfil;
+import com.isaque.backend.model.PessoaPerfil;
+import com.isaque.backend.repository.PerfilRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,12 +30,16 @@ public class PessoaService implements UserDetailsService {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private PerfilService perfilService;
 
-    public Pessoa inserir(@Valid Pessoa pessoa) {
-        Pessoa pessoaCadastrada = pessoaRepository.save(pessoa);
+    public Pessoa cadastrarPessoa(@Valid PessoaCadastroDTO dto) {
+        Perfil perfil = perfilService.buscarPorId(dto.getPerfilId());
+        Pessoa pessoa = new Pessoa(dto.getNome(), dto.getEmail(), dto.getSenha(), perfil);
+
 //        emailService.enviarEmailSimples(pessoaCadastro.getEmail(), "Cadastro com Sucesso", "Cadastro no Sistema de Leilão XXX foi feito com sucesso!");
-        enviarEmailSucesso(pessoaCadastrada);
-        return pessoaCadastrada;
+        enviarEmailSucesso(pessoa);
+        return pessoaRepository.save(pessoa);
     }
 
     private void enviarEmailSucesso(Pessoa pessoa) {
@@ -73,6 +80,4 @@ public class PessoaService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return pessoaRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Pessoa não encontrada"));
     }
-
-
 }

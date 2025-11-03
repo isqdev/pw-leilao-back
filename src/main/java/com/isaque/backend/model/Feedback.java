@@ -13,7 +13,7 @@ public class Feedback {
     private Long id;
     private String comentario;
     private Integer nota;
-    private LocalDateTime dataHora;
+    private LocalDateTime dataHora = LocalDateTime.now();
 
     @OneToOne
     private Pessoa pessoa;

@@ -1,5 +1,6 @@
 package com.isaque.backend.service;
 
+import com.isaque.backend.dto.request.CategoriaRequestDTO;
 import com.isaque.backend.exception.NaoEncontradoExcecao;
 import com.isaque.backend.model.Categoria;
 import com.isaque.backend.repository.CategoriaRepository;
@@ -25,14 +26,16 @@ public class CategoriaService {
         return categoriaCadastrado;
     }
 
-    public Categoria alterar(Categoria categoria) {
-        Categoria categoriaBanco = categoriaRepository.findById(categoria.getId())
+    public Categoria alterar(CategoriaRequestDTO categoria, Long id) {
+        Categoria categoriaBanco = categoriaRepository.findById(id)
                 .orElseThrow(
                         () -> new NaoEncontradoExcecao(messageSource.getMessage(
                                 "categoria.notfound",
-                                new Object[] { categoria.getId() },
+                                new Object[] { id },
                                 LocaleContextHolder.getLocale())));
         categoriaBanco.setNome(categoria.getNome());
+        categoriaBanco.setObservacao(categoria.getObservacao());
+
         return categoriaRepository.save(categoriaBanco);
     }
 

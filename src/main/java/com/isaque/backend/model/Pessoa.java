@@ -8,10 +8,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,13 +29,18 @@ public class Pessoa implements UserDetails {
     private String nome;
     @NotBlank(message = "{validation.email.notblank}")
     @Email(message = "{validation.email.notvalid}")
+    @Column(unique = true)
     private String email;
     @JsonIgnore
     private String senha;
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Setter(value = AccessLevel.NONE)
-    private List<PessoaPerfil> pessoaPerfil;
+    private List<PessoaPerfil> pessoaPerfil = new ArrayList<>();
+
+    public Pessoa() {
+
+    }
 
     public void setPessoaPerfil(List<PessoaPerfil> pessoaPerfil) {
         for (PessoaPerfil p:pessoaPerfil) {
@@ -42,40 +49,11 @@ public class Pessoa implements UserDetails {
         this.pessoaPerfil = pessoaPerfil;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public @NotBlank(message = "{validation.name.notblank}") String getNome() {
-        return nome;
-    }
-
-    public void setNome(@NotBlank(message = "{validation.name.notblank}") String nome) {
+    public Pessoa(String nome, String email, String senha, Perfil perfil) {
         this.nome = nome;
-    }
-
-    public @NotBlank(message = "{validation.email.notblank}") @Email(message = "{validation.email.notvalid}") String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotBlank(message = "{validation.email.notblank}") @Email(message = "{validation.email.notvalid}") String email) {
         this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public List<PessoaPerfil> getPessoaPerfil() {
-        return pessoaPerfil;
+        this.pessoaPerfil.add(new PessoaPerfil(this, perfil));
     }
 
     @Override

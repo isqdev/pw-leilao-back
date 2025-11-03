@@ -1,16 +1,22 @@
-package com.isaque.backend.dto;
+package com.isaque.backend.dto.response;
 
-import com.isaque.backend.model.Categoria;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class LeilaoRequestMiniDTO {
+public class LeilaoResponsePreviewDTO {
     private Long id;
     private String titulo;
     private String descricao;
     private LocalDateTime dataHoraInicio;
+
+    public LeilaoResponsePreviewDTO(Long id, String titulo, String descricao, LocalDateTime dataHoraInicio) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.dataHoraInicio = dataHoraInicio;
+    }
 
     public Long getId() {
         return id;

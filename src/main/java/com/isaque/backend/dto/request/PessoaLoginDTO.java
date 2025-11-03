@@ -1,4 +1,4 @@
-package com.isaque.backend.dto;
+package com.isaque.backend.dto.request;
 
 import lombok.Data;
 

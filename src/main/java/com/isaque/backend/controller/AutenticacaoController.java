@@ -1,7 +1,7 @@
 package com.isaque.backend.controller;
 
-import com.isaque.backend.dto.PessoaLoginDTO;
-import com.isaque.backend.dto.PessoaRequestDTO;
+import com.isaque.backend.dto.request.PessoaLoginDTO;
+import com.isaque.backend.dto.request.PessoaCadastroDTO;
 import com.isaque.backend.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class AutenticacaoController {
         private AutenticacaoService autenticacaoService;
 
         @PostMapping("/login")
-        public ResponseEntity<PessoaLoginDTO> login(@RequestBody PessoaRequestDTO pessoa) {
+        public ResponseEntity<PessoaLoginDTO> login(@RequestBody PessoaCadastroDTO pessoa) {
             return ResponseEntity.ok(autenticacaoService.autenticar(pessoa));
         }
 };

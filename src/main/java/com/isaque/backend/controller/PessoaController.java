@@ -1,8 +1,7 @@
 package com.isaque.backend.controller;
 
-import java.util.List;
-
-import org.apache.catalina.connector.Response;
+import com.isaque.backend.dto.request.PessoaCadastroDTO;
+import com.isaque.backend.service.PerfilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,6 @@ import com.isaque.backend.model.Pessoa;
 import com.isaque.backend.service.PessoaService;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/pessoa")
@@ -28,15 +26,17 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
-    
+    @Autowired
+    private PerfilService perfilService;
+
     @GetMapping
     public ResponseEntity<Page<Pessoa>> buscarTodos(Pageable pageable) {
         return ResponseEntity.ok(pessoaService.buscarTodos(pageable));
     }
 
-    @PostMapping
-    public ResponseEntity<Pessoa> inserir(@Valid @RequestBody Pessoa pessoa) {
-        return ResponseEntity.ok(pessoaService.inserir(pessoa));
+    @PostMapping("/cadastro")
+    public ResponseEntity<Pessoa> cadastrarPessoa(@Valid @RequestBody PessoaCadastroDTO dto) {
+        return ResponseEntity.ok(pessoaService.cadastrarPessoa(dto));
     }
 
     @PutMapping

@@ -31,9 +31,8 @@ public class PerfilService {
     @Autowired
     private EmailService emailService;
 
-    public Perfil inserir(Perfil perfil) {
-        Perfil perfilCadastrado = perfilRepository.save(perfil);
-        return perfilCadastrado;
+    public Perfil inserir(String perfil) {
+        return perfilRepository.save(new Perfil(perfil));
     }
 
     public Perfil alterar(Perfil perfil) {
